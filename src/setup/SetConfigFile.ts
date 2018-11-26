@@ -26,7 +26,7 @@ export class SetConfigFile {
     module: "commonjs",
     logger: "none",
     ignoreCompilerErrors: true,
-    excludeExternals: true,
+    excludeExternals: false,
     excludePrivate: true,
     excludeProtected: true,
     hideGenerator: true,

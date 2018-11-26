@@ -1,6 +1,6 @@
 {
   "name": "@undoc/ts-gen",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Undoc JSON generator for TypeScript",
   "main": "dist/index.js",
   "license": "MIT",
@@ -16,6 +16,10 @@
     "typescript",
     "generator"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tilersmyth/undoc-ts-gen.git"
+  },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
     "@types/inquirer": "^0.0.43",
