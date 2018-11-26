@@ -1,0 +1,33 @@
+{
+  "name": "@undoc/ts-gen",
+  "version": "0.0.1",
+  "description": "Undoc JSON generator for TypeScript",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "rimraf ./dist && tsc"
+  },
+  "author": {
+    "name": "Tyler Smith",
+    "email": "tyler.smith.la@gmail.com"
+  },
+  "tags": [
+    "undoc",
+    "typescript",
+    "generator"
+  ],
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/inquirer": "^0.0.43",
+    "@types/mkdirp": "^0.5.2",
+    "@types/yup": "^0.26.2",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "inquirer": "^6.2.0",
+    "mkdirp": "^0.5.1",
+    "typedoc": "^0.13.0",
+    "yup": "^0.26.6"
+  }
+}
