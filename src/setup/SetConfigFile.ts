@@ -44,12 +44,6 @@ export class SetConfigFile {
       this.tdJson.target = projectTarget;
 
       await FileUtils.createFile(".undoc/td.json", JSON.stringify(this.tdJson));
-
-      console.log(
-        chalk.green(
-          `\nSuccess! Use command 'undoc publish' to create/update documentation\n`
-        )
-      );
     } catch (err) {
       throw err;
     }

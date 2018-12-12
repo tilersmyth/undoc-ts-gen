@@ -42,7 +42,7 @@ export class Convert {
 
         const rootDir = FileUtils.rootDirectory();
         const done = application.generateJson(
-          this.files,
+          application.expandInputFiles(this.files),
           `${rootDir}/.undoc/docs.json`
         );
 
