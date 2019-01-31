@@ -5,6 +5,9 @@ export const setup = async (): Promise<void> => {
   return new SetConfigFile().run();
 };
 
-export const generate = async (files: string[]): Promise<{}> => {
-  return new Convert(files).generate();
+export const generate = async (
+  files: string[],
+  update: boolean
+): Promise<{}> => {
+  return new Convert(files, update).generate();
 };

@@ -1,14 +1,17 @@
-import * as typedoc from "typedoc";
 import * as yup from "yup";
+
+import { Application } from "typedoc/dist/lib/application";
 
 import { Output } from "./Output";
 import { FileUtils } from "../utils/FileUtils";
 
 export class Convert {
   files: string[];
+  update: boolean;
 
-  constructor(files: string[]) {
+  constructor(files: string[], update: boolean) {
     this.files = files;
+    this.update = update;
   }
 
   private static schema() {
@@ -29,13 +32,14 @@ export class Convert {
   private static async tdFile(): Promise<any> {
     try {
       const file = await FileUtils.readFile(".undoc/td.json");
-      return JSON.parse(file);
+      const options = JSON.parse(file);
+      return options;
     } catch (err) {
       throw err;
     }
   }
 
-  converter = (application: any) => {
+  converter = (application: Application) => {
     return new Promise(async (resolve, reject) => {
       try {
         application.converter.on("all", new Output().logger);
@@ -55,17 +59,11 @@ export class Convert {
   };
 
   generate = async () => {
-    const tdFile = await Convert.tdFile();
-    const schema = Convert.schema();
-
     try {
-      await schema.validate(tdFile);
-    } catch (err) {
-      throw `TypeDoc (td.json) file schema invalid:\n${err.message}`;
-    }
-
-    try {
-      const app = new typedoc.Application(tdFile);
+      const tdFile = await Convert.tdFile();
+      const app = new Application(tdFile);
+      const posFiles = this.update ? this.files : [];
+      app.options.setValue("npFiles", posFiles);
       const results = await this.converter(app);
       app.converter.off("all");
       return results;

@@ -1,2 +1,6 @@
 node_modules/
 dist
+.undoc/
+local.ts
+dist
+yarn-error.log
