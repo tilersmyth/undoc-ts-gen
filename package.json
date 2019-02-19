@@ -22,17 +22,13 @@
     "url": "https://github.com/tilersmyth/undoc-ts-gen.git"
   },
   "devDependencies": {
-    "@types/chalk": "^2.2.0",
     "@types/inquirer": "^0.0.43",
     "@types/mkdirp": "^0.5.2",
-    "@types/yup": "^0.26.2",
     "rimraf": "^2.6.2",
     "ts-node": "^7.0.1"
   },
   "dependencies": {
-    "chalk": "^2.4.1",
     "inquirer": "^6.2.0",
-    "mkdirp": "^0.5.1",
-    "yup": "^0.26.6"
+    "mkdirp": "^0.5.1"
   }
 }

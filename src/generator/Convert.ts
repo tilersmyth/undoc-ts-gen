@@ -1,32 +1,15 @@
-import * as yup from "yup";
-
 import { Application } from "typedoc/dist/lib/application";
 
-import { Output } from "./Output";
+import { GeneratorEvents } from "./Events";
 import { FileUtils } from "../utils/FileUtils";
 
 export class Convert {
-  files: string[];
-  update: boolean;
+  allFiles: string[];
+  modifiedFiles: string[];
 
-  constructor(files: string[], update: boolean) {
-    this.files = files;
-    this.update = update;
-  }
-
-  private static schema() {
-    return yup.object().shape({
-      mode: yup.string().required(),
-      json: yup.string().required(),
-      module: yup.string().required(),
-      logger: yup.string().required(),
-      target: yup.string().required(),
-      ignoreCompilerErrors: yup.boolean().required(),
-      excludePrivate: yup.boolean().required(),
-      excludeProtected: yup.boolean().required(),
-      hideGenerator: yup.boolean().required(),
-      stripInternal: yup.boolean().required()
-    });
+  constructor(allFiles: string[], modifiedFiles: string[]) {
+    this.allFiles = allFiles;
+    this.modifiedFiles = modifiedFiles;
   }
 
   private static async tdFile(): Promise<any> {
@@ -42,11 +25,11 @@ export class Convert {
   converter = (application: Application) => {
     return new Promise(async (resolve, reject) => {
       try {
-        application.converter.on("all", new Output().logger);
+        application.converter.on("all", new GeneratorEvents().event);
 
         const rootDir = FileUtils.rootDirectory();
         const done = application.generateJson(
-          application.expandInputFiles(this.files),
+          application.expandInputFiles(this.allFiles),
           `${rootDir}/.undoc/docs.json`
         );
 
@@ -62,8 +45,7 @@ export class Convert {
     try {
       const tdFile = await Convert.tdFile();
       const app = new Application(tdFile);
-      const posFiles = this.update ? this.files : [];
-      app.options.setValue("npFiles", posFiles);
+      app.options.setValue("npFiles", this.modifiedFiles);
       const results = await this.converter(app);
       app.converter.off("all");
       return results;

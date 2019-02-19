@@ -6,8 +6,8 @@ export const setup = async (): Promise<void> => {
 };
 
 export const generate = async (
-  files: string[],
-  update: boolean
+  allFiles: string[],
+  modifiedFiles: string[]
 ): Promise<{}> => {
-  return new Convert(files, update).generate();
+  return new Convert(allFiles, modifiedFiles).generate();
 };
