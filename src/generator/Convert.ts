@@ -5,11 +5,11 @@ import { FileUtils } from "../utils/FileUtils";
 import GeneratorEvents from "../Events";
 
 export class Convert {
-  allFiles: string[];
+  addedFiles: string[];
   modifiedFiles: string[];
 
-  constructor(allFiles: string[], modifiedFiles: string[]) {
-    this.allFiles = allFiles;
+  constructor(addedFiles: string[], modifiedFiles: string[]) {
+    this.addedFiles = addedFiles;
     this.modifiedFiles = modifiedFiles;
   }
 
@@ -32,9 +32,10 @@ export class Convert {
       try {
         application.converter.on("all", this.event);
 
+        const allFiles = [...this.addedFiles, ...this.modifiedFiles];
         const rootDir = FileUtils.rootDirectory();
         const done = application.generateJson(
-          application.expandInputFiles(this.allFiles),
+          application.expandInputFiles(allFiles),
           `${rootDir}/.undoc/docs.json`
         );
 

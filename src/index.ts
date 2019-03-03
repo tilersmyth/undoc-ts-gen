@@ -9,7 +9,7 @@ export const setup = async (): Promise<void> => {
 
 export const generate = async (
   undocEventEmitter: any,
-  allFiles: string[],
+  addedFiles: string[],
   modifiedFiles: string[]
 ): Promise<{}> => {
   GeneratorEvents.emitter = undocEventEmitter;
@@ -17,5 +17,5 @@ export const generate = async (
   const context = "Generating TypeDoc JSON";
   GeneratorEvents.emitter("generator_init", context);
 
-  return new Convert(allFiles, modifiedFiles).generate();
+  return new Convert(addedFiles, modifiedFiles).generate();
 };
