@@ -1,7 +1,8 @@
 import { Application } from "typedoc/dist/lib/application";
 
-import { GeneratorEvents } from "./Events";
 import { FileUtils } from "../utils/FileUtils";
+
+import GeneratorEvents from "../Events";
 
 export class Convert {
   allFiles: string[];
@@ -22,10 +23,14 @@ export class Convert {
     }
   }
 
+  private event = (event: string, context: any) => {
+    GeneratorEvents.emitter(`generator_${event}`, context);
+  };
+
   converter = (application: Application) => {
     return new Promise(async (resolve, reject) => {
       try {
-        application.converter.on("all", new GeneratorEvents().event);
+        application.converter.on("all", this.event);
 
         const rootDir = FileUtils.rootDirectory();
         const done = application.generateJson(
