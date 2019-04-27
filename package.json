@@ -1,6 +1,6 @@
 {
   "name": "@undoc/ts-gen",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "Undoc JSON generator for TypeScript",
   "main": "dist/index.js",
   "license": "MIT",
@@ -24,11 +24,12 @@
   "devDependencies": {
     "@types/inquirer": "^0.0.43",
     "@types/mkdirp": "^0.5.2",
-    "rimraf": "^2.6.2",
+    "rimraf": "^2.6.3",
     "ts-node": "^7.0.1"
   },
   "dependencies": {
     "inquirer": "^6.2.0",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "typedoc": "^0.14.2"
   }
 }

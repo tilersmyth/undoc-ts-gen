@@ -19,19 +19,6 @@ export class SetConfigFile {
     }
   ];
 
-  private tdJson: any = {
-    mode: "modules",
-    json: "./.undoc/docs.json",
-    module: "commonjs",
-    logger: "none",
-    ignoreCompilerErrors: true,
-    excludeExternals: false,
-    excludePrivate: true,
-    excludeProtected: true,
-    hideGenerator: true,
-    stripInternal: true
-  };
-
   run = async (): Promise<void> => {
     try {
       const { projectTarget } = await (<any>inquirer.prompt(this.inputs));
@@ -40,9 +27,19 @@ export class SetConfigFile {
         throw "error creating project file";
       }
 
-      this.tdJson.target = projectTarget;
+      const configFile = await FileUtils.readFile(".undoc/config.json");
 
-      await FileUtils.createFile(".undoc/td.json", JSON.stringify(this.tdJson));
+      if (!configFile) {
+        throw "Undoc configuration file not found.";
+      }
+
+      const parsedConfigFile = JSON.parse(configFile);
+      parsedConfigFile.target = projectTarget;
+
+      await FileUtils.createFile(
+        ".undoc/config.json",
+        JSON.stringify(parsedConfigFile)
+      );
     } catch (err) {
       throw err;
     }
