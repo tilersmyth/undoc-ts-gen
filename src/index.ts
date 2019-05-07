@@ -9,15 +9,19 @@ export const setup = async (): Promise<void> => {
 
 export const generate = async (
   undocEventEmitter: any,
-  allFiles: string[],
-  isUpdate: boolean
+  oldFiles: string[],
+  allFiles: string[]
 ): Promise<boolean> => {
   GeneratorEvents.emitter = undocEventEmitter;
+
+  if (oldFiles.length > 0) {
+    await new Convert(oldFiles).generate(true);
+  }
 
   const context = "Generating TypeDoc JSON";
   GeneratorEvents.emitter("generator_init", context);
 
-  await new Convert(allFiles).generate(isUpdate);
+  await new Convert(allFiles).generate(false);
 
   return true;
 };
