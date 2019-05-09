@@ -1,20 +1,19 @@
 import { Application } from "typedoc/dist/lib/application";
 
 import { FileUtils } from "../utils/FileUtils";
-
-import GeneratorEvents from "../Events";
+import { ConverterEvents } from "./Events";
 
 export class Convert {
-  allFiles: string[];
-
-  constructor(allFiles: string[]) {
+  constructor(private allFiles: string[], private hasUpdate: boolean) {
     this.allFiles = allFiles;
+    this.hasUpdate = hasUpdate;
   }
 
   private tdConfig: any = {
     mode: "modules",
     module: "commonjs",
     logger: "none",
+    excludeExternals: true,
     ignoreCompilerErrors: true,
     excludePrivate: true,
     excludeProtected: true,
@@ -25,36 +24,32 @@ export class Convert {
   private static async tdFile(): Promise<any> {
     try {
       const file = await FileUtils.readFile(".undoc/config.json");
-      const options = JSON.parse(file);
-      return options;
+      return JSON.parse(file);
     } catch (err) {
       throw err;
     }
   }
 
-  private application = async (): Promise<Application> => {
-    const config = await Convert.tdFile();
-    this.tdConfig.target = config.target;
+  private updateType = (isUpdate: boolean): string => {
+    if (this.hasUpdate) {
+      return `${isUpdate ? "diff" : "current"}\xa0`;
+    }
 
-    const app = new Application(this.tdConfig);
-
-    return app;
+    return "";
   };
 
-  private event = (event: string, context: any) => {
-    GeneratorEvents.emitter(`generator_${event}`, context);
-  };
-
-  converter = (application: Application, jsonPath: string) => {
+  private converter = (application: Application, isUpdate: boolean) => {
     return new Promise(async (resolve, reject) => {
       try {
-        application.converter.on("all", this.event);
+        const updateType = this.updateType(isUpdate);
+        const events = new ConverterEvents(this.allFiles, updateType);
+        application.converter.on("all", events.emit);
 
         const rootDir = FileUtils.rootDirectory();
-
+        const path = `.undoc/temp/${isUpdate ? "old" : "new"}.json`;
         const done = application.generateJson(
           application.expandInputFiles(this.allFiles),
-          `${rootDir}/${jsonPath}`
+          `${rootDir}/${path}`
         );
 
         resolve(done);
@@ -67,12 +62,11 @@ export class Convert {
 
   generate = async (isUpdate: boolean) => {
     try {
-      const app = await this.application();
+      const config = await Convert.tdFile();
+      this.tdConfig.target = config.target;
+      const app = new Application(this.tdConfig);
 
-      app.options.setValue("excludeExternals", isUpdate);
-
-      const path = `.undoc/temp/${isUpdate ? "old" : "new"}.json`;
-      const results = await this.converter(app, path);
+      const results = await this.converter(app, isUpdate);
 
       app.converter.off("all");
       return results;

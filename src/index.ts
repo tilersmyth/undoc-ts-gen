@@ -14,14 +14,18 @@ export const generate = async (
 ): Promise<boolean> => {
   GeneratorEvents.emitter = undocEventEmitter;
 
-  if (oldFiles.length > 0) {
-    await new Convert(oldFiles).generate(true);
-  }
-
   const context = "Generating TypeDoc JSON";
   GeneratorEvents.emitter("generator_init", context);
 
-  await new Convert(allFiles).generate(false);
+  // Indicating that this generator instance includes
+  // updated files
+  const hasUpdate = oldFiles.length > 0;
+
+  if (hasUpdate) {
+    await new Convert(oldFiles, hasUpdate).generate(true);
+  }
+
+  await new Convert(allFiles, hasUpdate).generate(false);
 
   return true;
 };
